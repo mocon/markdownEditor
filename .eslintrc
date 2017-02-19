@@ -1,0 +1,17 @@
+{
+    "extends": "rallycoding",
+    "rules": {
+        "max-len": 0,
+        "one-var": 0,
+        "jsx-curly-spacing": 0,
+        "no-unused-expressions": [
+            "error", {
+                "allowShortCircuit": true,
+                "allowTernary": true
+            }
+        ],
+        "no-prototype-builtins": 0,
+        "arrow-body-style": 0,
+        "array-callback-return": 0
+    }
+}
