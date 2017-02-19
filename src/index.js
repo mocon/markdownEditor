@@ -3,10 +3,9 @@ import React, { createClass } from 'react';
 import { render } from 'react-dom';
 import firebase from 'firebase';
 import { Router, Route, IndexRoute, browserHistory, Link, withRouter } from 'react-router';
-
 import { firebaseConfig } from './helpers/constants';
+import Edit from './components/Edit';
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
 function App(props) {
@@ -21,38 +20,59 @@ const Form = withRouter(
     createClass({
         getInitialState() {
             return {
-                value: ''
+                loggedIn: false
             };
         },
-        submitAction(event) {
-            event.preventDefault();
-            this.props.router.push({
-                pathname: '/page',
-                query: {
-                    qsparam: this.state.value
-                }
-            });
+        authenticate(provider) {
+            firebase.auth().signInWithPopup(provider)
+                .then(this.authHandler)
+                .catch(err => console.error(err));
         },
-        handleChange(event) {
-            this.setState({ value: event.target.value });
+        authHandler(authData) {
+            const user = authData.user || authData;
+
+            if (user) {
+                this.setState({ loggedIn: true });
+                this.props.router.push({
+                    pathname: '/edit',
+                    state: {
+                        user: {
+                            id: user.uid,
+                            name: user.displayName,
+                            email: user.email
+                        }
+                    }
+                });
+            } else {
+                this.setState({ loggedIn: false });
+                this.props.router.push({
+                    pathname: '/error',
+                    state: {
+                        user: null
+                    }
+                });
+            }
+        },
+        signOut() {
+            firebase.auth().signOut().then(() => {
+                this.setState({ loggedIn: false });
+            }, (err) => {
+                console.error(err);
+            });
         },
         render() {
             return (
-                <form onSubmit={this.submitAction}>
-                    <p>Token is <em>pancakes</em></p>
-                    <input type="text" value={this.state.value} onChange={this.handleChange} />
-                    <button type="submit">Submit the thing</button>
-                    <p><Link to="/page?qsparam=pancakes">Or authenticate via URL</Link></p>
-                    <p><Link to="/page?qsparam=bacon">Or try failing to authenticate via URL</Link></p>
-                </form>
+                <div>
+                    {
+                        !this.state.loggedIn
+                        ? <button onClick={() => { this.authenticate(new firebase.auth.GoogleAuthProvider()); }}>Login with Google</button>
+                        : <button onClick={() => { this.signOut(); }}>Log out</button>
+                    }
+                </div>
             );
         }
     })
 );
-
-function Page() {
-    return <h1>Hey, I see you are authenticated. Welcome!</h1>;
-}
 
 function ErrorPage() {
     return (
@@ -64,9 +84,14 @@ function ErrorPage() {
 }
 
 function requireCredentials(nextState, replace, next) {
-    const query = nextState.location.query;
-    if (query.qsparam) {
-        serverAuth(query.qsparam)
+    let user = null;
+
+    if (nextState.location.state && nextState.location.state.user) {
+        user = nextState.location.state.user;
+    }
+
+    if (user !== null) {
+        serverAuth(user)
         .then(
             () => next(),
             () => {
@@ -80,11 +105,10 @@ function requireCredentials(nextState, replace, next) {
     }
 }
 
-function serverAuth(authToken) {
+function serverAuth(user) {
     return new Promise((resolve, reject) => {
-        // That server is gonna take a while
         setTimeout(() => {
-            if (authToken === 'pancakes') {
+            if (user !== null) {
             resolve('authenticated');
         } else {
             reject('nope');
@@ -96,7 +120,7 @@ render((
     <Router history={browserHistory}>
         <Route path="/" component={App}>
             <IndexRoute component={Form} />
-            <Route path="page" component={Page} onEnter={requireCredentials} />
+            <Route path="edit" component={Edit} onEnter={requireCredentials} />
             <Route path="error" component={ErrorPage} />
         </Route>
     </Router>
