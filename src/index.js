@@ -2,9 +2,10 @@
 import React, { createClass } from 'react';
 import { render } from 'react-dom';
 import firebase from 'firebase';
-import { Router, Route, IndexRoute, browserHistory, Link, withRouter } from 'react-router';
+import { Router, Route, IndexRoute, browserHistory, withRouter } from 'react-router';
 import { firebaseConfig } from './helpers/constants';
 import Edit from './components/Edit';
+import Error from './components/Error';
 
 firebase.initializeApp(firebaseConfig);
 
@@ -65,23 +66,14 @@ const Form = withRouter(
                 <div>
                     {
                         !this.state.loggedIn
-                        ? <button onClick={() => { this.authenticate(new firebase.auth.GoogleAuthProvider()); }}>Login with Google</button>
-                        : <button onClick={() => { this.signOut(); }}>Log out</button>
+                        ? <button className="gds-button gds-button--primary" onClick={() => { this.authenticate(new firebase.auth.GoogleAuthProvider()); }}>Login with Google</button>
+                        : <button className="gds-button gds-button--outline" onClick={() => { this.signOut(); }}>Log out</button>
                     }
                 </div>
             );
         }
     })
 );
-
-function ErrorPage() {
-    return (
-        <div>
-            <h1>Oh no! Your auth failed!</h1>
-            <p><Link to="/">Please login to continue</Link></p>
-        </div>
-    );
-}
 
 function requireCredentials(nextState, replace, next) {
     let user = null;
@@ -121,7 +113,7 @@ render((
         <Route path="/" component={App}>
             <IndexRoute component={Form} />
             <Route path="edit" component={Edit} onEnter={requireCredentials} />
-            <Route path="error" component={ErrorPage} />
+            <Route path="error" component={Error} />
         </Route>
     </Router>
 ), document.getElementById('root'));

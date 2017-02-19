@@ -22,8 +22,8 @@ export default class Edit extends Component {
     render() {
         return (
             <div>
-                <h1>Edit page, must be authenticated to see this</h1>
-                <button onClick={() => { this.signOut(); }}>Sign out</button>
+                <h1>Edit page, must be authenticated (user: {this.state.user.name}) to see this.</h1>
+                <button className="gds-button gds-button--primary" onClick={() => { this.signOut(); }}>Sign out</button>
             </div>
         );
     }
