@@ -1,7 +1,13 @@
 /*global document b:true*/
 import React, { createClass } from 'react';
 import { render } from 'react-dom';
+import firebase from 'firebase';
 import { Router, Route, IndexRoute, browserHistory, Link, withRouter } from 'react-router';
+
+import { firebaseConfig } from './helpers/constants';
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 
 function App(props) {
     return (
@@ -49,7 +55,12 @@ function Page() {
 }
 
 function ErrorPage() {
-    return <h1>Oh no! Your auth failed!</h1>;
+    return (
+        <div>
+            <h1>Oh no! Your auth failed!</h1>
+            <p><Link to="/">Please login to continue</Link></p>
+        </div>
+    );
 }
 
 function requireCredentials(nextState, replace, next) {
