@@ -8,7 +8,15 @@ export default class SpaHeader extends Component {
         };
     }
 
+    toggleMenu = () => {
+        this.setState({
+            isMenuOpen: !this.state.isMenuOpen
+        });
+    }
+
     render() {
+        const menuClass = this.state.isMenuOpen ? 'gds-avatar--menu-open' : '';
+
         return (
             <header className="gds-spa-header">
                 <div className="gds-spa-header__primary-nav">
@@ -18,7 +26,7 @@ export default class SpaHeader extends Component {
                 </div>
                 <div className="gds-spa-header__secondary-nav">
                     <div className="gds-spa-header__section gds-spa-header__section--white">
-                        <div className="gds-avatar gds-avatar--menu-open -m-l-2" data-gds-avatar>
+                        <div className={`gds-avatar ${menuClass} -m-l-2`} onClick={() => { this.toggleMenu(); }}>
                             <div className="gds-avatar__image">
                                 <img src="https://c.gumgum.com/ads/com/gumgum/documentation/avatars/avatar--default2.jpg" alt="User Name" height="100%" />
                             </div>
