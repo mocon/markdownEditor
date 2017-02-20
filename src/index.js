@@ -31,7 +31,6 @@ const Form = withRouter(
         },
         authHandler(authData) {
             const user = authData.user || authData;
-
             if (user) {
                 this.setState({ loggedIn: true });
                 this.props.router.push({
@@ -63,12 +62,10 @@ const Form = withRouter(
         },
         render() {
             return (
-                <div>
-                    {
-                        !this.state.loggedIn
-                        ? <button className="gds-button gds-button--primary" onClick={() => { this.authenticate(new firebase.auth.GoogleAuthProvider()); }}>Login with Google</button>
-                        : <button className="gds-button gds-button--outline" onClick={() => { this.signOut(); }}>Log out</button>
-                    }
+                <div className="gds-account-modal gds-account-modal--logo">
+                    <div className="gds-form gds-account-modal__form gds-card -p-a-3">
+                        <button className="gds-button gds-button--block gds-button--primary" onClick={() => { this.authenticate(new firebase.auth.GoogleAuthProvider()); }}>Login with Google</button>
+                    </div>
                 </div>
             );
         }
