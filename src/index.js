@@ -106,11 +106,11 @@ function serverAuth(user) {
 }
 
 render((
-    <Router history={browserHistory}>
-        <Route path="/" component={App}>
-            <IndexRoute component={Form} />
-            <Route path="edit" component={Edit} onEnter={requireCredentials} />
-            <Route path="error" component={Error} />
+    <Router history={ browserHistory }>
+        <Route path="/" component={ App }>
+            <IndexRoute component={ Form } />
+            <Route path="edit" component={ Edit } onEnter={ requireCredentials } />
+            <Route path="error" component={ Error } />
         </Route>
     </Router>
 ), document.getElementById('root'));
