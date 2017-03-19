@@ -20,8 +20,6 @@ export default class Edit extends Component {
     getItems = () => {
         let itemsRef = this.props.route.firebaseRef.database().ref('items');
 
-        console.log(this);
-
         return itemsRef.once('value').then((snapshot) => {
             this.setState({
                 items: snapshot.val()
