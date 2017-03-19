@@ -7,12 +7,26 @@ export default class Edit extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: this.props.location.state.user
+            user: this.props.location.state.user,
+            items: null
         };
     }
 
     componentWillMount() {
         document.body.classList.add('-has-spa-header');
+        this.getItems();
+    }
+
+    getItems = () => {
+        let itemsRef = this.props.route.firebaseRef.database().ref('items');
+
+        console.log(this);
+
+        return itemsRef.once('value').then((snapshot) => {
+            this.setState({
+                items: snapshot.val()
+            });
+        });
     }
 
     signOut = () => {
