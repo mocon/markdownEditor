@@ -32,7 +32,7 @@ export default class Edit extends Component {
                 <div className="gds-layout__container">
                     <div className="gds-layout__row">
                         <div className="gds-layout__column--md-12">
-                            <h1 className="gds-text--header-md -m-b-3">Edit page, must be authenticated (user: {this.state.user.name}) to see this.</h1>
+                            <h1 className="gds-text--header-md -m-b-3">Edit page, must be authenticated (user: { this.state.user.name }) to see this.</h1>
                             <button className="gds-button gds-button--primary" onClick={() => { this.signOut(); }}>Sign out</button>
                         </div>
                     </div>
