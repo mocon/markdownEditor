@@ -17,14 +17,31 @@ export default class Edit extends Component {
         this.getItems();
     }
 
-    getItems = () => {
-        let itemsRef = this.props.route.firebaseRef.database().ref('items');
+    databaseRef = (path) => {
+        return this.props.route.firebaseRef.database().ref(path);
+    }
 
-        return itemsRef.once('value').then((snapshot) => {
+    createItem = (item) => {
+        // let newItemKey = this.databaseRef('items').push().key;
+        // let newItem = { three: 3 };
+        //
+        // this.databaseRef(`items/${newItemKey}`).set(newItem);
+    }
+
+    getItems = () => {
+        return this.databaseRef('items').once('value').then((snapshot) => {
             this.setState({
                 items: snapshot.val()
             });
         });
+    }
+
+    updateItem = (item) => {
+        //
+    }
+
+    deleteItem = (item) => {
+        //
     }
 
     signOut = () => {
@@ -45,6 +62,9 @@ export default class Edit extends Component {
                     <div className="gds-layout__row">
                         <div className="gds-layout__column--md-12">
                             <h1 className="gds-text--header-md -m-b-3">Edit page, must be authenticated (user: { this.state.user.name }) to see this.</h1>
+
+                            <button className="gds-button gds-button--primary -m-r-2" onClick={() => { this.createItem(); }}>Create</button>
+
                             <button className="gds-button gds-button--primary" onClick={() => { this.signOut(); }}>Sign out</button>
                         </div>
                     </div>
